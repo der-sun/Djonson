@@ -91,7 +91,7 @@ namespace Djonson {
 			});
 			this->menuStrip1->Location = System::Drawing::Point(0, 0);
 			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(794, 28);
+			this->menuStrip1->Size = System::Drawing::Size(1151, 28);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
 			// 
@@ -119,12 +119,19 @@ namespace Djonson {
 			// 
 			// dataGridView1
 			// 
+			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->AllowUserToDeleteRows = false;
+			this->dataGridView1->AllowUserToResizeColumns = false;
+			this->dataGridView1->AllowUserToResizeRows = false;
+			this->dataGridView1->AutoSizeColumnsMode = System::Windows::Forms::DataGridViewAutoSizeColumnsMode::Fill;
+			this->dataGridView1->BackgroundColor = System::Drawing::SystemColors::Control;
+			this->dataGridView1->BorderStyle = System::Windows::Forms::BorderStyle::None;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Location = System::Drawing::Point(26, 47);
 			this->dataGridView1->Name = L"dataGridView1";
 			this->dataGridView1->RowHeadersWidth = 51;
 			this->dataGridView1->RowTemplate->Height = 24;
-			this->dataGridView1->Size = System::Drawing::Size(308, 271);
+			this->dataGridView1->Size = System::Drawing::Size(384, 345);
 			this->dataGridView1->TabIndex = 1;
 			// 
 			// radioButton1
@@ -195,7 +202,7 @@ namespace Djonson {
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(88, 51);
+			this->button1->Location = System::Drawing::Point(175, 463);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(76, 28);
 			this->button1->TabIndex = 8;
@@ -206,15 +213,14 @@ namespace Djonson {
 			// groupBox1
 			// 
 			this->groupBox1->Controls->Add(this->radioButton6);
-			this->groupBox1->Controls->Add(this->button1);
 			this->groupBox1->Controls->Add(this->radioButton1);
 			this->groupBox1->Controls->Add(this->radioButton2);
 			this->groupBox1->Controls->Add(this->radioButton5);
 			this->groupBox1->Controls->Add(this->radioButton3);
 			this->groupBox1->Controls->Add(this->radioButton4);
-			this->groupBox1->Location = System::Drawing::Point(51, 333);
+			this->groupBox1->Location = System::Drawing::Point(87, 398);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(255, 85);
+			this->groupBox1->Size = System::Drawing::Size(247, 48);
 			this->groupBox1->TabIndex = 9;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Количество элементов";
@@ -223,8 +229,9 @@ namespace Djonson {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(794, 635);
+			this->ClientSize = System::Drawing::Size(1151, 519);
 			this->Controls->Add(this->groupBox1);
+			this->Controls->Add(this->button1);
 			this->Controls->Add(this->dataGridView1);
 			this->Controls->Add(this->menuStrip1);
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
@@ -250,8 +257,56 @@ namespace Djonson {
 	private: System::Void aboutToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
 		MessageBox::Show("About_menu");
 	}
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		dataGridView1->Columns->Add;
+
+	String^ GetSelectedRadioButtonText() {
+	   for each (Control ^ control in this->Controls) {
+		   GroupBox^ groupBox = dynamic_cast<GroupBox^>(control);
+		   if (groupBox != nullptr) {
+			   for each (Control ^ rb in groupBox->Controls) {
+				   RadioButton^ radioButton = dynamic_cast<RadioButton^>(rb);
+				   if (radioButton != nullptr && radioButton->Checked) {
+					   return radioButton->Text;
+				   }
+			   }
+		   }
+	   }
+	   return String::Empty;
 	}
+
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		String^ selectedText = GetSelectedRadioButtonText();
+		if (String::IsNullOrEmpty(selectedText)) {
+			MessageBox::Show("No option selected.");
+			return;
+		}
+
+
+		int rows = Convert::ToInt32(selectedText);
+		int columns = Convert::ToInt32(selectedText);
+
+		// Строим таблицу с заданным размером
+		BuildTable(rows, columns);
+	}
+
+		   // Функция для построения таблицы в DataGridView
+		   void BuildTable(int rows, int columns) {
+			   dataGridView1->Columns->Clear();
+			   dataGridView1->Rows->Clear();
+
+			   // Добавляем столбцы
+			   for (int i = 0; i < columns; ++i) {
+				   dataGridView1->Columns->Add("Column" + i.ToString(), i.ToString());
+			   }
+
+			   int rowHeight = dataGridView1->Height / (rows + 1);
+			   // Добавляем строки
+			   for (int i = 0; i < rows; ++i) {
+				   dataGridView1->Rows->Add();
+				   dataGridView1->Rows[i]->Height = rowHeight;
+				   dataGridView1->Rows[i]->HeaderCell->Value = i.ToString();
+			   }
+
+		   }
 };
 }
