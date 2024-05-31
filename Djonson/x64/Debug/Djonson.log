@@ -1,3 +1,6 @@
 ﻿  MyForm.cpp
+C:\Users\sasha\source\repos\Djonson\Djonson\MyForm.h(280,16): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+C:\Users\sasha\source\repos\Djonson\Djonson\MyForm.h(281,68): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+C:\Users\sasha\source\repos\Djonson\Djonson\MyForm.h(281,31): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
   MyForm.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
   Djonson.vcxproj -> C:\Users\sasha\source\repos\Djonson\x64\Debug\Djonson.exe
